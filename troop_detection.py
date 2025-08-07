@@ -7,7 +7,6 @@ from actions import Actions
 load_dotenv()
 API_KEY = os.getenv("ROBOFLOW_API_KEY")
 WORKSPACE_NAME = os.getenv("WORKSPACE_NAME")
-
 class TroopDetection:
     def __init__(self):
         self.img = Actions()
