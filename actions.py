@@ -8,7 +8,7 @@ class Actions:
     def __init__(self):
         self.os_type = platform.system()
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
-        self.images_folder = os.path.join(self.script_dir, 'main_images')
+        self.elixer_folder = "elixir_screenshots"
 
 
         if self.os_type == "Darwin":
@@ -38,9 +38,49 @@ class Actions:
         screenshot.save(save_path)
         return save_path
 
+    def count_elixir(self):
+        elixir_count = 0
+        for i in range(9,0,-1):
+            full_filepath = os.path.join(self.elixer_folder, f"{i}elixir.png")
+            try:
+                location = pyautogui.locateOnScreen(full_filepath, confidence=0.75, grayscale=True)
+                if location:
+                    elixir_count = i
+                    print("Elixir found:", elixir_count)
+                    return elixir_count
+            except pyautogui.ImageNotFoundException:
+                continue
+        return 0
 
-
+    def start_game(self):
+        pyautogui.moveTo(1450, 400, duration=1)
+        pyautogui.click()
+        while True:
+            try:
+                location = pyautogui.locateOnScreen("Battle-button.png", confidence=0.8)
+            except pyautogui.ImageNotFoundException:
+                location = None
+            if location:
+                x, y = pyautogui.center(location)
+                print("Button appeared! Moving to:", x, y)
+                pyautogui.moveTo(x / 2, y / 2, duration=0.5)  # adjust for Retina scaling if needed
+                pyautogui.click()
+                location = None
+                break  # Exit the loop after clicking the button
+            else:
+                # No button found — continue normally, let user control mouse
+                pyautogui.click(1270, 734)
+                time.sleep(0.5)
     
+    def play_again(self):
+        pyautogui.moveTo(1348, 842, duration=1)  # chang coords for play again button
+        pyautogui.click()  # click the mouse
+        time.sleep(1)
+        self.start_game() #if doing the OK button
+
+
+
+
     #play_again_x = 
     #play_again_y = 
 
