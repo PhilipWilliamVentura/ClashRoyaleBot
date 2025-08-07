@@ -2,10 +2,12 @@ import os
 from dotenv import load_dotenv
 from inference_sdk import InferenceHTTPClient
 from actions import Actions
+
 # Load environment variables
 load_dotenv()
 API_KEY = os.getenv("ROBOFLOW_API_KEY")
 WORKSPACE_NAME = os.getenv("WORKSPACE_NAME")
+
 class TroopDetection:
     def __init__(self):
         self.img = Actions()

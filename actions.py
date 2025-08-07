@@ -8,6 +8,7 @@ class Actions:
     def __init__(self):
         self.os_type = platform.system()
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
+        self.main_image_folder = "main_screenshots"
         self.elixer_folder = "elixir_screenshots"
 
 
@@ -55,9 +56,10 @@ class Actions:
     def start_game(self):
         pyautogui.moveTo(1450, 400, duration=1)
         pyautogui.click()
+        battlebutton = os.path.join(self.main_image_folder, "Battle-button.png")
         while True:
             try:
-                location = pyautogui.locateOnScreen("Battle-button.png", confidence=0.8)
+                location = pyautogui.locateOnScreen(battlebutton, confidence=0.8)
             except pyautogui.ImageNotFoundException:
                 location = None
             if location:
