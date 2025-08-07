@@ -16,7 +16,7 @@ class TroopDetection:
             api_key=API_KEY
         )
 
-    def run(self, image_name="troops_img.png"):
+    def run_troop_detection(self, image_name="troops_img.png"):
         # Capture screen region and get image path
         img_path = self.img.capture_area(image_name)
 

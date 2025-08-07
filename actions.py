@@ -22,6 +22,11 @@ class Actions:
             self.WIDTH = self.BOTTOM_RIGHT_X - self.TOP_LEFT_X
             self.HEIGHT = self.BOTTOM_RIGHT_Y - self.TOP_LEFT_Y
 
+            self.CARD_TOP_LEFT_X = 1095
+            self.CARD_TOP_LEFT_Y = 770
+            self.CARD_BAR_WIDTH = 1466 - 1095
+            self.CARD_BAR_HEIGHT = 886 - 770
+
 
         self.card_key = {
             "card1" : "1",
@@ -36,6 +41,11 @@ class Actions:
 
     def capture_area(self, save_path):
         screenshot = pyautogui.screenshot(region=(self.TOP_LEFT_X, self.TOP_LEFT_Y, self.WIDTH, self.HEIGHT))
+        screenshot.save(save_path)
+        return save_path
+    
+    def capture_card_area(self, save_path):
+        screenshot = pyautogui.screenshot(region=(self.CARD_TOP_LEFT_X, self.CARD_TOP_LEFT_Y, self.CARD_BAR_WIDTH//4, self.CARD_BAR_HEIGHT))
         screenshot.save(save_path)
         return save_path
 
