@@ -31,11 +31,10 @@ class Actions:
 
 
         self.card_key = {
-            "card1" : "1",
-            "card2" : "2",
-            "card3" : "3",
-            "card4" : "4", 
-            "emote" : "e"
+            0 : "1",
+            1 : "2",
+            2 : "3",
+            3 : "4"
         }
 
         # Card name to position mapping (will be updated during detection)
@@ -89,17 +88,42 @@ class Actions:
                 pyautogui.moveTo(x / 2, y / 2, duration=0.5)  # adjust for Retina scaling if needed
                 pyautogui.click()
                 location = None
-                break  # Exit the loop after clicking the button
+                break
             else:
                 # No button found — continue normally, let user control mouse
                 pyautogui.click(1270, 734)
                 time.sleep(0.5)
+    
+    def play_card(self, x, y, card_ind):
+        if card_ind in self.card_key:
+            pyautogui.moveTo(1100, 700)
+            pyautogui.click()
+            pyautogui.press(self.card_key[card_ind])
+            pyautogui.moveTo(x, y, duration=1)
+            pyautogui.click()
+        else:
+            print("Not valid card index")
     
     def play_again(self):
         pyautogui.moveTo(1348, 842, duration=1)  # chang coords for play again button
         pyautogui.click()  # click the mouse
         time.sleep(1)
         self.start_game() #if doing the OK button
+
+    def detect_winner(self):
+        winner_screenshot = os.path.join(self.main_image_folder, "Winner.png")
+
+        try:
+            winner_location = pyautogui.locateOnScreen(winner_screenshot, confidence=0.8, grayscale=True)
+        except pyautogui.ImageNotFoundException:
+            winner_location = None
+            
+        if winner_location:
+            _, y = pyautogui.center(winner_location)
+            result = "victory" if y > 350 else "defeat"
+            return result
+        else:
+            return None
 
 
 
@@ -109,3 +133,4 @@ class Actions:
 
     #top_bridge = 421
     #bot_bridge = 450
+
