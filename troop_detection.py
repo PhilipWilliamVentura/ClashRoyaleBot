@@ -16,7 +16,7 @@ class TroopDetection:
             api_key=API_KEY
         )
 
-    def run(self, image_name="troops_img.png"):
+    def run_troop_detection(self, image_name="troops_img.png"):
         # Capture screen region and get image path
         img_path = self.img.capture_area(image_name)
 
@@ -44,3 +44,8 @@ class TroopDetection:
             })
 
         return clean_predictions, count_objects
+
+if __name__ == "__main__":
+    x = TroopDetection()
+    predictions, count = x.run_troop_detection()
+    print(predictions, count)
