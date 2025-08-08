@@ -44,3 +44,8 @@ class TroopDetection:
             })
 
         return clean_predictions, count_objects
+
+if __name__ == "__main__":
+    x = TroopDetection()
+    predictions, count = x.run_troop_detection()
+    print(predictions, count)

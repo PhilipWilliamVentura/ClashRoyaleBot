@@ -10,6 +10,7 @@ class Actions:
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
         self.main_image_folder = "main_screenshots"
         self.elixer_folder = "elixir_screenshots"
+        self.card_folder = "card_screenshots"
 
 
         if self.os_type == "Darwin":
@@ -22,10 +23,11 @@ class Actions:
             self.WIDTH = self.BOTTOM_RIGHT_X - self.TOP_LEFT_X
             self.HEIGHT = self.BOTTOM_RIGHT_Y - self.TOP_LEFT_Y
 
-            self.CARD_TOP_LEFT_X = 1095
+            self.CARD_TOP_LEFT_X = 1100
             self.CARD_TOP_LEFT_Y = 770
-            self.CARD_BAR_WIDTH = 1466 - 1095
+            self.CARD_BAR_WIDTH = 1469 - 1100
             self.CARD_BAR_HEIGHT = 886 - 770
+            self.CARD_WIDTH = self.CARD_BAR_WIDTH//4
 
 
         self.card_key = {
@@ -40,14 +42,23 @@ class Actions:
         self.current_card_positions = {}
 
     def capture_area(self, save_path):
+        full = os.path.join(self.main_image_folder, save_path)
         screenshot = pyautogui.screenshot(region=(self.TOP_LEFT_X, self.TOP_LEFT_Y, self.WIDTH, self.HEIGHT))
-        screenshot.save(save_path)
-        return save_path
+        screenshot.save(full)
+        return full
     
-    def capture_card_area(self, save_path):
-        screenshot = pyautogui.screenshot(region=(self.CARD_TOP_LEFT_X, self.CARD_TOP_LEFT_Y, self.CARD_BAR_WIDTH//4, self.CARD_BAR_HEIGHT))
-        screenshot.save(save_path)
-        return save_path
+    def capture_card_area(self, path_card1, path_card2, path_card3, path_card4):
+        full1 = os.path.join(self.card_folder, path_card1)
+        full2 = os.path.join(self.card_folder, path_card2)
+        full3 = os.path.join(self.card_folder, path_card3)
+        full4 = os.path.join(self.card_folder, path_card4)
+
+        pyautogui.screenshot(region=(self.CARD_TOP_LEFT_X, self.CARD_TOP_LEFT_Y, self.CARD_WIDTH, self.CARD_BAR_HEIGHT)).save(full1)
+        pyautogui.screenshot(region=(self.CARD_TOP_LEFT_X + self.CARD_WIDTH, self.CARD_TOP_LEFT_Y, self.CARD_WIDTH, self.CARD_BAR_HEIGHT)).save(full2)
+        pyautogui.screenshot(region=(self.CARD_TOP_LEFT_X + 2*self.CARD_WIDTH, self.CARD_TOP_LEFT_Y, self.CARD_WIDTH, self.CARD_BAR_HEIGHT)).save(full3)
+        pyautogui.screenshot(region=(self.CARD_TOP_LEFT_X + 3*self.CARD_WIDTH, self.CARD_TOP_LEFT_Y, self.CARD_WIDTH, self.CARD_BAR_HEIGHT)).save(full4)
+
+        return full1, full2, full3, full4
 
     def count_elixir(self):
         elixir_count = 0
