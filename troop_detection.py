@@ -29,19 +29,23 @@ class TroopDetection:
 
         # Handle output format
         workflow_output = result[0] if isinstance(result, list) else result
-        count_objects = workflow_output.get("count_objects", 0)
         predictions_block = workflow_output.get("predictions", {})
         raw_preds = predictions_block.get("predictions", [])
 
         # Clean and return predictions
-        clean_predictions = []
+        allies = []
+        enemies = []
         for pred in raw_preds:
             cx, cy = pred["x"], pred["y"]
-            clean_predictions.append((pred["class"], cx, cy))
+            if pred["class"].startswith("ally"):
+                allies.append((cx, cy))
+            else:
+                enemies.append((cx, cy))
 
-        return clean_predictions, count_objects
+        return allies, enemies
 
 if __name__ == "__main__":
     x = TroopDetection()
-    predictions, count = x.run_troop_detection()
-    print(predictions, count)
+    allies, enemies = x.run_troop_detection()
+    print("Allies: ", allies)
+    print("Enemies: ", enemies)

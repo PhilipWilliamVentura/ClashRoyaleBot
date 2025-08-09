@@ -67,7 +67,6 @@ class Actions:
                 location = pyautogui.locateOnScreen(full_filepath, confidence=0.75, grayscale=True)
                 if location:
                     elixir_count = i
-                    print("Elixir found:", elixir_count)
                     return elixir_count
             except pyautogui.ImageNotFoundException:
                 continue

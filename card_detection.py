@@ -34,7 +34,7 @@ class CardDetection:
             raw_pred = predictions_block.get("predictions", [])
 
             for pred in raw_pred:
-                clean_predictions.append(pred["class_id"])
+                clean_predictions.append(pred["class_id"] / 109) # 109 classes in vision model
 
         return clean_predictions
 
