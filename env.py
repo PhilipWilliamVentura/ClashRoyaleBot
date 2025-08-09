@@ -40,5 +40,26 @@ class Env:
         state = np.array(cards_in_hand + [elixir / 10] + final_ally + final_enemy, dtype=np.float32)
         return state
 
-x = Env()
-print(x._get_state())
+    def _compute_reward(self, state):
+        if state is None:
+            return 0
+
+        elixir = state[4] * 10
+
+        # Reward based on elixir efficiency and enemy presence
+        enemy_positions = state[1 + 2 * MAX_ALLIES:]
+        enemy_presence = sum(enemy_positions)
+
+        reward = -enemy_presence
+
+        # Elixir efficiency
+        if self.prev_elixir is not None and self.prev_enemy_presence is not None:
+            elixir_spent = self.prev_elixir - elixir
+            enemy_reduced = self.prev_enemy_presence - enemy_presence
+            if elixir_spent > 0 and enemy_reduced > 0:
+                reward += 2 * min(elixir_spent, enemy_reduced)  # tune this factor
+
+        self.prev_elixir = elixir
+        self.prev_enemy_presence = enemy_presence
+
+        return reward
