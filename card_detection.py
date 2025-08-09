@@ -34,10 +34,7 @@ class CardDetection:
             raw_pred = predictions_block.get("predictions", [])
 
             for pred in raw_pred:
-                clean_predictions.append({
-                    "class_name": pred.get("class") or pred.get("class_name"),
-                    "confidence": round(pred["confidence"], 4),
-                })
+                clean_predictions.append(pred["class_id"])
 
         return clean_predictions
 

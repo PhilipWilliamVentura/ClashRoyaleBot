@@ -37,11 +37,7 @@ class TroopDetection:
         clean_predictions = []
         for pred in raw_preds:
             cx, cy = pred["x"], pred["y"]
-            clean_predictions.append({
-                "class_name": pred.get("class") or pred.get("class_name"),
-                "confidence": round(pred["confidence"], 4),
-                "position": (cx, cy)
-            })
+            clean_predictions.append((pred["class"], cx, cy))
 
         return clean_predictions, count_objects
 
