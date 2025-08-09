@@ -4,8 +4,6 @@ import torch.optim as optim
 import random
 from collections import deque
 
-ALL_CARDS = ["Hog Rider", "Fireball", "Archers", "Mega Minion"]  # etc
-card_to_idx = {name: i for i, name in enumerate(ALL_CARDS)}
 
 GRID_W, GRID_H = 18, 8
 NUM_POSITIONS = GRID_W * GRID_H
