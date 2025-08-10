@@ -3,6 +3,7 @@ import threading
 import time
 from actions import Actions
 from card_detection import CardDetection
+from tower_detection import TowerDetection
 from troop_detection import TroopDetection
 
 
@@ -13,6 +14,7 @@ class Env:
     def __init__(self):
         self.actions = Actions()
         self.troop_detection = TroopDetection()
+        self.tower_detection = TowerDetection()
         self.card_detection = CardDetection()
 
         self.num_cards = 4
@@ -22,6 +24,8 @@ class Env:
         self.game_end_flag = None
         self._game_end_thread = None
         self._game_end_thread_stop = threading.Event()
+
+        self.prev_enemy_tower = None
     
     def reboot(self):
         time.sleep(3)
@@ -29,8 +33,10 @@ class Env:
         self._game_end_thread_stop.clear()
         self._game_end_thread = threading.Thread(target=self._game_end_detector, daemon=True)
         self._game_end_thread.start()
-        state = self._get_state()
-        return state
+        self.prev_elixir = None
+        self.prev_enemy_presence = None
+        self.prev_ally_tower, self.prev_enemy_tower = self.tower_detection.run_tower_detection() 
+        return self._get_state()
     
     def finish(self):
         self._game_end_thread_stop.set()
@@ -73,8 +79,8 @@ class Env:
         elixir = state[4] * 10
 
         # Reward based on elixir efficiency and enemy presence
-        enemy_positions = state[1 + 2 * MAX_ALLIES:]
-        enemy_presence = sum(enemy_positions)
+        enemy_positions = state[5 + 2 * MAX_ALLIES: len(state): 2]
+        enemy_presence = sum(1 for pos in enemy_positions if pos > 0)
 
         reward = -enemy_presence
 
@@ -83,10 +89,22 @@ class Env:
             elixir_spent = self.prev_elixir - elixir
             enemy_reduced = self.prev_enemy_presence - enemy_presence
             if elixir_spent > 0 and enemy_reduced > 0:
-                reward += 2 * min(elixir_spent, enemy_reduced)  # tune this factor
+                reward += 2 * min(elixir_spent, enemy_reduced)  # tune this factor (2 is arbitrary)
 
         self.prev_elixir = elixir
         self.prev_enemy_presence = enemy_presence
+
+        # Tower detection reward
+        curr_ally_tower, curr_enemy_tower = self.tower_detection.run_tower_detection()
+        if self.prev_enemy_tower is not None:
+            if curr_enemy_tower < self.prev_enemy_tower:
+                reward = 20
+        self.prev_enemy_tower = curr_enemy_tower
+
+        if self.prev_ally_tower is not None:
+            if curr_ally_tower < self.prev_ally_tower:
+                reward -= 10
+        self.prev_ally_tower = curr_ally_tower
 
         return reward
 
