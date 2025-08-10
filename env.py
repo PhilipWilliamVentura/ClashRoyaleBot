@@ -18,6 +18,7 @@ class Env:
         self.card_detection = CardDetection()
 
         self.available_action = self.get_all_actions()
+        self.action_size = len(self.available_action)
 
         self.num_cards = 4
         self.grid_width = 18
