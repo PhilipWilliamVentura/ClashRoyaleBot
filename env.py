@@ -16,6 +16,7 @@ class Env:
         self.troop_detection = TroopDetection()
         self.tower_detection = TowerDetection()
         self.card_detection = CardDetection()
+        self.state_size = 5 + 2 * (MAX_ALLIES + MAX_ENEMIES)  # cards in hand + elixir + ally positions + enemy positions
 
         self.available_action = self.get_all_actions()
         self.action_size = len(self.available_action)
@@ -33,6 +34,7 @@ class Env:
         self.prev_enemy_tower = None
     
     def reboot(self):
+        self.actions.play_again()
         time.sleep(3)
         self.game_end_flag = None
         self._game_end_thread_stop.clear()
