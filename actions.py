@@ -14,10 +14,10 @@ class Actions:
 
 
         if self.os_type == "Darwin":
-            self.TOP_LEFT_X = 1072
-            self.TOP_LEFT_Y = 158
-            self.BOTTOM_RIGHT_X = 1476
-            self.BOTTOM_RIGHT_Y =709
+            self.TOP_LEFT_X = 1035
+            self.TOP_LEFT_Y = 150
+            self.BOTTOM_RIGHT_X = 1445
+            self.BOTTOM_RIGHT_Y =715
             self.BRIDGE_HEIGHT = 30
             self.FIELD_AREA = (self.TOP_LEFT_X, self.TOP_LEFT_Y, self.BOTTOM_RIGHT_X, self.BOTTOM_RIGHT_Y)
 
