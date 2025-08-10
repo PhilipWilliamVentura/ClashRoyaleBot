@@ -18,11 +18,16 @@ class KeyboardController:
             if key.char == 'q':
                 print("\nShutdown requested - cleaning up...")
                 self.should_exit = True
+
         except AttributeError:
             pass  # Special key pressed
             
     def is_exit_requested(self):
         return self.should_exit
+    
+    def stop(self):
+        self.listener.stop()
+
 
 def get_latest_model_path(models_dir="models"):
     model_files = glob.glob(os.path.join(models_dir, "model_*.pth"))
@@ -54,6 +59,8 @@ def train():
     for ep in range(episodes):
         if controller.is_exit_requested():
             print("Training interrupted by user.")
+            controller.stop()
+            env.finish()
             break
 
         state = env.reboot()
