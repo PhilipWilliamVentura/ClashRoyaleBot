@@ -35,7 +35,7 @@ class TowerDetection:
         )
 
         workflow_output = result[0] if isinstance(result, list) else result
-        predictions_block = workflow_output.get("predictions", {})
+        predictions_block = workflow_output.get("model_predictions", {})
         raw_preds = predictions_block.get("predictions", [])
 
         ally_tower = 0
