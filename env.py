@@ -49,11 +49,11 @@ class Env:
             self._game_end_thread.join()
     
     def step(self, valid_action):
-        if self.game_over_flag:
-            valid_action = len(self.available_actions) - 1
+        if self.game_end_flag:
+            valid_action = len(self.available_action) - 1
             done = True
             reward = self._compute_reward(self._get_state())
-            result = self.game_over_flag
+            result = self.game_end_flag
             if result == "victory":
                 reward += 100
                 print("Victory detected - game end")
@@ -62,14 +62,13 @@ class Env:
                 print("Defeat detected - game end")
             return self._get_state(), reward, done
         
-        action = self.available_actions[valid_action]
+        action = self.available_action[valid_action]
         card_ind, x_frac, y_frac = action
 
-        if card_ind >= 0 and card_ind < len(self.current_cards):
-            card_name = self.current_cards[card_ind]
+        if card_ind >= 0 and card_ind < self.num_cards:
             x = int(x_frac * self.actions.WIDTH) + self.actions.TOP_LEFT_X
             y = int(y_frac * self.actions.HEIGHT // 2) + self.actions.TOP_LEFT_Y + self.actions.HEIGHT // 2 + self.actions.BRIDGE_HEIGHT #Limit play to lower half
-            print(f"Attempting to play {card_name} at {x}, {y}")
+            print(f"Attempting to play card at {x}, {y}")
             self.actions.play_card(x, y, card_ind)
             time.sleep(1)
 
@@ -159,4 +158,4 @@ class Env:
             if result:
                 self.game_end_flag = result
                 break
-        time.sleep(1)
+            time.sleep(1)
