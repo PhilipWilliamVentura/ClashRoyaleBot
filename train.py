@@ -2,6 +2,7 @@ import os
 import torch
 import glob
 import json
+from actions import Actions
 from env import Env
 from dqn_agent import DoubleDQNAgent
 from pynput import keyboard
@@ -39,7 +40,7 @@ def get_latest_model_path(models_dir="models"):
 def train():
     env = Env()
     agent = DoubleDQNAgent(env.state_size, env.action_size)
-
+    actions = Actions()
     os.makedirs("models", exist_ok=True)
 
     latest_model = get_latest_model_path("models")
@@ -55,6 +56,7 @@ def train():
 
     controller = KeyboardController()
     episodes = 10000
+    actions.start_game()
 
     for ep in range(episodes):
         if controller.is_exit_requested():

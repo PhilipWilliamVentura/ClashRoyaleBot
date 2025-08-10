@@ -18,7 +18,7 @@ class Actions:
             self.TOP_LEFT_Y = 150
             self.BOTTOM_RIGHT_X = 1445
             self.BOTTOM_RIGHT_Y =715
-            self.BRIDGE_HEIGHT = 30
+            self.BRIDGE_HEIGHT = 20
             self.FIELD_AREA = (self.TOP_LEFT_X, self.TOP_LEFT_Y, self.BOTTOM_RIGHT_X, self.BOTTOM_RIGHT_Y)
 
             self.WIDTH = self.BOTTOM_RIGHT_X - self.TOP_LEFT_X
@@ -71,7 +71,7 @@ class Actions:
         return 0
 
     def start_game(self):
-        pyautogui.moveTo(1450, 400, duration=1)
+        pyautogui.moveTo(1430, 500, duration=0.5)
         pyautogui.click()
         battlebutton = os.path.join(self.main_image_folder, "Battle-button.png")
         while True:
@@ -88,24 +88,21 @@ class Actions:
                 break
             else:
                 # No button found — continue normally, let user control mouse
-                pyautogui.click(1270, 734)
+                pyautogui.click(1430, 500)
                 time.sleep(0.5)
     
     def play_card(self, x, y, card_ind):
         if card_ind in self.card_key:
-            pyautogui.moveTo(1100, 700)
-            pyautogui.click()
             pyautogui.press(self.card_key[card_ind])
-            pyautogui.moveTo(x, y, duration=1)
+            pyautogui.moveTo(x, y, duration=0.1)
             pyautogui.click()
         else:
             print("Not valid card index")
     
     def play_again(self):
-        pyautogui.moveTo(1348, 842, duration=1)  # chang coords for play again button
-        pyautogui.click()  # click the mouse
-        time.sleep(1)
-        self.start_game() #if doing the OK button
+        pyautogui.press("1")  # Change to 1 for play again button
+        time.sleep(0.5)
+        #self.start_game() #if doing the OK button
 
     def detect_winner(self):
         winner_screenshot = os.path.join(self.main_image_folder, "Winner.png")

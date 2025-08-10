@@ -18,12 +18,12 @@ class Env:
         self.card_detection = CardDetection()
         self.state_size = 5 + 2 * (MAX_ALLIES + MAX_ENEMIES)  # cards in hand + elixir + ally positions + enemy positions
 
-        self.available_action = self.get_all_actions()
-        self.action_size = len(self.available_action)
-
         self.num_cards = 4
         self.grid_width = 18
         self.grid_height = 14
+
+        self.available_action = self.get_all_actions()
+        self.action_size = len(self.available_action)
 
         self.game_end_flag = None
         self._game_end_thread = None
@@ -34,7 +34,6 @@ class Env:
         self.prev_enemy_tower = None
     
     def reboot(self):
-        self.actions.play_again()
         time.sleep(3)
         self.game_end_flag = None
         self._game_end_thread_stop.clear()
@@ -62,6 +61,7 @@ class Env:
             elif result == "defeat":
                 reward -= 100
                 print("Defeat detected - game end")
+            self.actions.play_again()
             return self._get_state(), reward, done
         
         action = self.available_action[valid_action]
