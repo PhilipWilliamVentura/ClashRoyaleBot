@@ -17,9 +17,11 @@ class Env:
         self.tower_detection = TowerDetection()
         self.card_detection = CardDetection()
 
+        self.available_action = self.get_all_actions()
+
         self.num_cards = 4
         self.grid_width = 18
-        self.grid_height = 28
+        self.grid_height = 14
 
         self.game_end_flag = None
         self._game_end_thread = None
@@ -44,6 +46,37 @@ class Env:
         self._game_end_thread_stop.set()
         if self._game_end_thread:
             self._game_end_thread.join()
+    
+    def step(self, valid_action):
+        if self.game_over_flag:
+            valid_action = len(self.available_actions) - 1
+            done = True
+            reward = self._compute_reward(self._get_state())
+            result = self.game_over_flag
+            if result == "victory":
+                reward += 100
+                print("Victory detected - game end")
+            elif result == "defeat":
+                reward -= 100
+                print("Defeat detected - game end")
+            return self._get_state(), reward, done
+        
+        action = self.available_actions[valid_action]
+        card_ind, x_frac, y_frac = action
+
+        if card_ind >= 0 and card_ind < len(self.current_cards):
+            card_name = self.current_cards[card_ind]
+            x = int(x_frac * self.actions.WIDTH) + self.actions.TOP_LEFT_X
+            y = int(y_frac * self.actions.HEIGHT // 2) + self.actions.TOP_LEFT_Y + self.actions.HEIGHT // 2 + self.actions.BRIDGE_HEIGHT #Limit play to lower half
+            print(f"Attempting to play {card_name} at {x}, {y}")
+            self.actions.play_card(x, y, card_ind)
+            time.sleep(1)
+
+        done = False
+        reward = self._compute_reward(self._get_state())
+        next_state = self._get_state()
+        return next_state, reward, done
+
     
     def _get_state(self):
         elixir = self.actions.count_elixir()
@@ -72,7 +105,6 @@ class Env:
         
         state = np.array(cards_in_hand + [elixir / 10] + final_ally + final_enemy, dtype=np.float32)
         return state
-
 
     def _compute_reward(self, state):
         if state is None:

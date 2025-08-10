@@ -18,6 +18,7 @@ class Actions:
             self.TOP_LEFT_Y = 158
             self.BOTTOM_RIGHT_X = 1476
             self.BOTTOM_RIGHT_Y =709
+            self.BRIDGE_HEIGHT = 30
             self.FIELD_AREA = (self.TOP_LEFT_X, self.TOP_LEFT_Y, self.BOTTOM_RIGHT_X, self.BOTTOM_RIGHT_Y)
 
             self.WIDTH = self.BOTTOM_RIGHT_X - self.TOP_LEFT_X
@@ -36,9 +37,6 @@ class Actions:
             2 : "3",
             3 : "4"
         }
-
-        # Card name to position mapping (will be updated during detection)
-        self.current_card_positions = {}
 
     def capture_area(self, save_path):
         full = os.path.join(self.main_image_folder, save_path)
@@ -130,6 +128,4 @@ class Actions:
     #play_again_x = 
     #play_again_y = 
 
-    #top_bridge = 421
-    #bot_bridge = 450
 
