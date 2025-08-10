@@ -27,6 +27,8 @@ class Env:
         self._game_end_thread = None
         self._game_end_thread_stop = threading.Event()
 
+        self.prev_elixir = None
+        self.prev_enemy_presence = None
         self.prev_enemy_tower = None
     
     def reboot(self):
