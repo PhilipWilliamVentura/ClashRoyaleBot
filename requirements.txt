@@ -35,8 +35,11 @@ py-cpuinfo==9.0.0
 PyAutoGUI==0.9.54
 PyGetWindow==0.0.9
 PyMsgBox==1.0.9
+pynput==1.8.1
 pyobjc-core==11.1
+pyobjc-framework-ApplicationServices==11.1
 pyobjc-framework-Cocoa==11.1
+pyobjc-framework-CoreText==11.1
 pyobjc-framework-Quartz==11.1
 pyparsing==3.2.3
 pyperclip==1.9.0
