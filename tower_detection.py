@@ -48,5 +48,3 @@ class TowerDetection:
 
         return ally_tower, enemy_tower
     
-x = TowerDetection()
-print(x.run_tower_detection())
