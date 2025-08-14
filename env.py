@@ -69,7 +69,7 @@ class Env:
 
         if card_ind >= 0 and card_ind < self.num_cards:
             x = int(x_frac * self.actions.WIDTH) + self.actions.TOP_LEFT_X
-            y = int(y_frac * self.actions.HEIGHT // 2) + self.actions.TOP_LEFT_Y + self.actions.HEIGHT // 2 + self.actions.BRIDGE_HEIGHT #Limit play to lower half
+            y = int(y_frac * self.actions.HEIGHT / 2 + self.actions.TOP_LEFT_Y + self.actions.HEIGHT // 2) #Limit play to lower half
             print(f"Attempting to play card at {x}, {y}")
             self.actions.play_card(x, y, card_ind)
             time.sleep(1)

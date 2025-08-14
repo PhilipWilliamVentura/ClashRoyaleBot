@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 import random
+import numpy as np
 
 class ClashRoyaleDQN(nn.Module):
     def __init__(self, state_size, action_size):
