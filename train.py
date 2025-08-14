@@ -58,25 +58,26 @@ def save_checkpoint(agent, episode):
     print(f"Saved checkpoint at episode {episode}, epsilon: {agent.epsilon:.4f}")
 
 def load_latest_checkpoint(agent):
-    """Load the most recent checkpoint"""
     latest_model = get_latest_model_path("models")
     if latest_model:
         print(f"Loading model: {latest_model}")
-        agent.policy_net.load_state_dict(torch.load(latest_model))
+        state_dict = torch.load(latest_model, map_location="cpu")
+
+        # Check first layer size
+        fc1_weight = state_dict.get("fc1.weight")
+        if fc1_weight is not None and fc1_weight.shape[1] != agent.policy_net.fc1.in_features:
+            print(f"State size mismatch: checkpoint expects {fc1_weight.shape[1]} features, "
+                  f"but agent has {agent.policy_net.fc1.in_features}. Skipping load.")
+            return 0
+
+        agent.policy_net.load_state_dict(state_dict)
         agent.target_net.load_state_dict(agent.policy_net.state_dict())
-        
-        # Try to load corresponding metadata
-        # Extract the base name and look for meta file
+
+        # Load metadata
         base_name = os.path.basename(latest_model)
-        if base_name.startswith("model_ep"):
-            # New format: model_ep000123_timestamp.pth -> meta_ep000123_timestamp.json
-            meta_name = base_name.replace("model_", "meta_").replace(".pth", ".json")
-        else:
-            # Old timestamp format: model_timestamp.pth -> meta_timestamp.json
-            meta_name = base_name.replace("model_", "meta_").replace(".pth", ".json")
-        
+        meta_name = base_name.replace("model_", "meta_").replace(".pth", ".json")
         meta_path = os.path.join("models", meta_name)
-        
+
         if os.path.exists(meta_path):
             with open(meta_path) as f:
                 meta = json.load(f)
@@ -87,8 +88,8 @@ def load_latest_checkpoint(agent):
         else:
             print(f"Metadata file not found: {meta_path}")
             print("Starting with default epsilon")
-    
     return 0
+
 
 def train():
     env = Env()
