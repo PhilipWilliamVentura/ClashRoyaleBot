@@ -67,8 +67,8 @@ def train():
     print(f"Resuming training. Epsilon: {agent.epsilon:.3f}, Memory size: {len(agent.memory)}")
 
     controller = KeyboardController()
-    episodes = 10000
-    save_interval = 25
+    episodes = 15
+    save_interval = 15
     actions.start_game()
 
     for ep in range(episodes):
