@@ -87,6 +87,11 @@ class Env:
 
         allies, enemies = self.troop_detection.run_troop_detection()
 
+        # Ensure cards in hand is length of 4
+        while len(cards_in_hand) < 4:
+            cards_in_hand.append(0.0)
+        cards_in_hand = cards_in_hand[:4]
+
         # Normalize positions
         def normalize(units):
             return [(x / self.actions.WIDTH, y / self.actions.HEIGHT) for x, y in units]
