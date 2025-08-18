@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 import random
+import numpy as np
 
 class ClashRoyaleDQN(nn.Module):
     def __init__(self, state_size, action_size):
@@ -17,7 +18,7 @@ class ClashRoyaleDQN(nn.Module):
         return self.fc3(x)  # Q-values
     
 class DoubleDQNAgent:
-    def __init__(self, state_size, action_size, lr=1e-3, gamma=0.99, epsilon=1.0, epsilon_min=0.05, epsilon_decay=0.999, target_update_freq=1000):
+    def __init__(self, state_size, action_size, lr=1e-3, gamma=0.99, epsilon=1.0, epsilon_min=0.1, epsilon_decay=0.9995, target_update_freq=1000):
         self.state_size = state_size
         self.action_size = action_size
         self.gamma = gamma

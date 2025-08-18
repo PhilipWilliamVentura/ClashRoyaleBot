@@ -1,6 +1,5 @@
 import os
 import torch
-import glob
 import json
 import pickle
 from actions import Actions
@@ -30,14 +29,6 @@ class KeyboardController:
         self.listener.stop()
 
 
-def save_agent(agent, path_prefix):
-    """Save model weights, epsilon, and replay buffer."""
-    torch.save(agent.policy_net.state_dict(), f"{path_prefix}.pth")
-    with open(f"{path_prefix}_meta.json", "w") as f:
-        json.dump({"epsilon": agent.epsilon}, f)
-    with open(f"{path_prefix}_memory.pkl", "wb") as f:
-        pickle.dump(agent.memory, f)
-
 def load_agent(agent, path_prefix):
     """Load model weights, epsilon, and replay buffer if they exist."""
     model_path = f"{path_prefix}.pth"
@@ -56,20 +47,18 @@ def load_agent(agent, path_prefix):
         print(f"Loaded replay buffer with {len(agent.memory)} experiences")
 
 
-def train():
+def friendlymatch():
     env = Env()
     agent = DoubleDQNAgent(env.state_size, env.action_size)
     actions = Actions()
-    os.makedirs("models", exist_ok=True)
 
     # Load latest agent
     load_agent(agent, "models/model_latest")
     print(f"Resuming training. Epsilon: {agent.epsilon:.3f}, Memory size: {len(agent.memory)}")
 
     controller = KeyboardController()
-    episodes = 15
-    save_interval = 15
-    actions.start_game()
+    episodes = 1
+    actions.start_friendly_match()
 
     for ep in range(episodes):
         state = env.reboot()
@@ -79,11 +68,6 @@ def train():
 
         while not done:
             if controller.is_exit_requested():
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                save_agent(agent, f"models/model_interrupt_{timestamp}")
-                # Also save latest for safe resume
-                save_agent(agent, "models/model_latest")
-                print(f"Training interrupted. Model saved at episode {ep+1}.")
                 controller.stop()
                 env.finish()
                 return
@@ -95,17 +79,9 @@ def train():
             state = next_state
             total_reward += reward
 
-        print(f"Episode {ep+1} finished. Total Reward: {total_reward:.2f}, Epsilon: {agent.epsilon:.3f}")
+        print("GG")
 
-        # Save latest agent every episode
-        save_agent(agent, "models/model_latest")
-
-        # Save timestamped snapshot every N episodes
-        if ep % save_interval == 0 or ep == episodes - 1:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            save_agent(agent, f"models/model_{timestamp}")
-            print(f"Snapshot saved at episode {ep+1}")
 
 
 if __name__ == "__main__":
-    train()
+    friendlymatch()

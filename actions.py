@@ -118,6 +118,45 @@ class Actions:
             return result
         else:
             return None
+        
+
+    def start_friendly_match(self):
+        pyautogui.moveTo(1430, 500, duration=0.5)
+        pyautogui.click()
+        friends_button = os.path.join(self.main_image_folder, "Friends.png")
+        friendly_match_button = os.path.join(self.main_image_folder, "Friendly-battle.png")
+        while True:
+            try:
+                location = pyautogui.locateOnScreen(friends_button, confidence=0.8)
+            except pyautogui.ImageNotFoundException:
+                location = None
+            if location:
+                x, y = pyautogui.center(location)
+                print("Button appeared! Moving to:", x, y)
+                pyautogui.moveTo(x / 2, y / 2, duration=0.5)  # adjust for Retina scaling if needed
+                pyautogui.click()
+                location = None
+                break
+            else:
+                # No button found — continue normally, let user control mouse
+                pyautogui.click(1430, 500)
+                time.sleep(0.5)
+        while True:
+            try:
+                location = pyautogui.locateOnScreen(friendly_match_button, confidence=0.8)
+            except pyautogui.ImageNotFoundException:
+                location = None
+            if location:
+                x, y = pyautogui.center(location)
+                print("Button appeared! Moving to:", x, y)
+                pyautogui.moveTo(x / 2, y / 2, duration=0.5)  # adjust for Retina scaling if needed
+                pyautogui.click()
+                location = None
+                break
+            else:
+                # No button found — continue normally, let user control mouse
+                pyautogui.click(1430, 215)
+                time.sleep(0.5)
 
 
 

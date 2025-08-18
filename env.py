@@ -69,7 +69,7 @@ class Env:
 
         if card_ind >= 0 and card_ind < self.num_cards:
             x = int(x_frac * self.actions.WIDTH) + self.actions.TOP_LEFT_X
-            y = int(y_frac * self.actions.HEIGHT // 2) + self.actions.TOP_LEFT_Y + self.actions.HEIGHT // 2 + self.actions.BRIDGE_HEIGHT #Limit play to lower half
+            y = int(y_frac * self.actions.HEIGHT / 2 + self.actions.TOP_LEFT_Y + self.actions.HEIGHT // 2) #Limit play to lower half
             print(f"Attempting to play card at {x}, {y}")
             self.actions.play_card(x, y, card_ind)
             time.sleep(1)
@@ -86,6 +86,11 @@ class Env:
         cards_in_hand = self.card_detection.run_card_detection()
 
         allies, enemies = self.troop_detection.run_troop_detection()
+
+        # Ensure cards in hand is length of 4
+        while len(cards_in_hand) < 4:
+            cards_in_hand.append(0.0)
+        cards_in_hand = cards_in_hand[:4]
 
         # Normalize positions
         def normalize(units):
